@@ -1,0 +1,46 @@
+= Red Hat OpenShift Application Runtime - Jaeger Agent as sidecar
+:toc: macro
+
+This example is based on the link:https://github.com/rhoar-enablement/vert.x[Red Hat OpenShift Application Runtime Vert.x example]
+and adds distributed tracing support via Jaeger by:
+
+* Adding a tracer initialization routine in the verticle constructor
+* Wraps the HTTP requests in a span
+
+toc::[]
+
+== Running
+
+=== Bare metal
+
+Start Jaeger
+[source,bash]
+----
+docker run \
+    --rm \
+    --name jaeger \
+    -p6831:6831/udp \
+    -p16686:16686 \
+    jaegertracing/all-in-one:1.6
+----
+
+Run the application with sampling set to 1, to record all incoming requests:
+[source,bash]
+----
+JAEGER_SAMPLER_TYPE=const JAEGER_SAMPLER_PARAM=1 mvn clean vertx:run
+----
+
+And call the HTTP endpoint:
+[source,bash]
+----
+curl localhost:8080
+----
+
+A trace with a single span should now be available at link:http://localhost:16686[Jaeger] and should look
+like this:
+
+image::trace.png[]
+
+=== OpenShift
+
+Coming soon.
