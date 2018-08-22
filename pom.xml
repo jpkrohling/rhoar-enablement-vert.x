@@ -10,8 +10,14 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+
     <vertx.projectVersion>3.4.1</vertx.projectVersion>
     <vertx.verticle>com.redhat.gpte.appmod.HelloHttpVerticle</vertx.verticle>
+
+    <jaeger.version>0.30.5-SNAPSHOT</jaeger.version>
+    <slf4j.version>1.7.25</slf4j.version>
   </properties>
 
   <dependencyManagement>
@@ -25,7 +31,9 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+
   <dependencies>
+
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-core</artifactId>
@@ -34,29 +42,30 @@
       <groupId>io.vertx</groupId>
       <artifactId>vertx-web</artifactId>
     </dependency>
+
     <dependency>
       <groupId>io.jaegertracing</groupId>
       <artifactId>jaeger-client</artifactId>
-      <version>0.30.5-SNAPSHOT</version>
+      <version>${jaeger.version}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.25</version>
+      <version>${slf4j.version}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-      <version>1.7.25</version>
+      <version>${slf4j.version}</version>
     </dependency>
   </dependencies>
 
   <build>
     <plugins>
       <plugin>
-        <groupId>io.fabric8</groupId>
+        <groupId>io.reactiverse</groupId>
         <artifactId>vertx-maven-plugin</artifactId>
-        <version>1.0.6</version>
+        <version>1.0.17</version>
         <executions>
           <execution>
             <id>vmp-init-package</id>
@@ -70,14 +79,6 @@
           <redeploy>true</redeploy>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
 
@@ -89,7 +90,7 @@
           <plugin>
             <groupId>io.fabric8</groupId>
             <artifactId>fabric8-maven-plugin</artifactId>
-            <version>3.5.40</version>
+            <version>3.5.41</version>
             <executions>
               <execution>
                 <id>fmp</id>
@@ -100,15 +101,6 @@
                 </goals>
               </execution>
             </executions>
-            <configuration>
-              <enricher>
-                <excludes>
-                  <exclude>vertx-health-check</exclude>
-                  <exclude>wildfly-swarm-health-check</exclude>
-                  <exclude>spring-boot-health-check</exclude> <!-- only this exclusion needed here -->
-                </excludes>
-              </enricher>
-            </configuration>
           </plugin>
         </plugins>
       </build>
